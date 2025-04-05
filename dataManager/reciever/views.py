@@ -4,7 +4,8 @@ import time
 import logging
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-
+import requests
+from django.conf import settings
 logger = logging.getLogger(__name__)
 
 class MetricsCollector(threading.Thread):
@@ -46,6 +47,15 @@ def receive_file(request):
         with open(file_path, 'wb+') as dest:
             for chunk in file.chunks():
                 dest.write(chunk)
+
+
+        processed_data = {
+            "filename": filename,
+            "size": os.path.getsize(file_path),
+            # "metrics": collector.metrics
+            # "metadata": metadata, 
+        }
+        requests.post(f"{settings.STORAGE_URL}store/", data=processed_data)
 
         collector.stop()
         collector.join()
