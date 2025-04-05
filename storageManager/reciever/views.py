@@ -1,15 +1,20 @@
 from django.http import JsonResponse
-import os
+from django.views.decorators.csrf import csrf_exempt
 
+@csrf_exempt
 def store_file(request):
-    if request.method == 'POST' and request.FILES.get('file'):
-        file = request.FILES['file']
-        path = f"/tmp/almacenado_{file.name}"
+    if request.method == 'POST':
+        filename = request.POST.get('filename')
+        size = request.POST.get('size')
 
-        with open(path, 'wb+') as dest:
-            for chunk in file.chunks():
-                dest.write(chunk)
+        if not filename or not size:
+            return JsonResponse({"error": "Missing filename or size"}, status=400)
 
-        return JsonResponse({"status": "stored", "file": file.name})
+        # Aquí podrías guardar esta info en la base de datos o loguearla
+        return JsonResponse({
+            "status": "stored",
+            "filename": filename,
+            "size": size
+        })
 
-    return JsonResponse({"error": "No file received"}, status=400)
+    return JsonResponse({"error": "Invalid method"}, status=405)
