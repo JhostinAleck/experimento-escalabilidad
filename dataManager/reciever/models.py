@@ -1,8 +1,8 @@
 from django.http import JsonResponse
 import requests
 import os
-
-STORAGE_URL = "http://<IP_VM_STORAGE>:8000/store/"
+import time
+STORAGE_URL = "http://34.41.151.57:8000/store/"
 
 def receive_file(request):
     if request.method == 'POST' and request.FILES.get('file'):
@@ -10,13 +10,13 @@ def receive_file(request):
         filename = file.name
 
         with open(f"/tmp/{filename}", 'wb+') as dest:
-            for chunk in file.chunks():
-                dest.write(chunk)
+            print(f"Received file: {filename}")
+            # time
 
         data = {
             "filename": filename,
-            "size": os.path.getsize(f"/tmp/{filename}")
-            # "metadata": metadata, 
+            "result": "success",
+            "time": time.time(),
         }
         # Simulación de envío a almacenamiento
         with open(f"/tmp/{filename}", 'rb') as f:

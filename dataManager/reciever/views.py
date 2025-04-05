@@ -45,15 +45,13 @@ def receive_file(request):
         file_path = f"/tmp/{filename}"
 
         with open(file_path, 'wb+') as dest:
-            for chunk in file.chunks():
-                dest.write(chunk)
+            print(f"Received file: {filename}")
 
 
         processed_data = {
             "filename": filename,
-            "size": os.path.getsize(file_path),
-            # "metrics": collector.metrics
-            # "metadata": metadata, 
+            "result": "success",
+            "time": time.time(),
         }
         requests.post(f"{settings.STORAGE_URL}store/", data=processed_data)
 
