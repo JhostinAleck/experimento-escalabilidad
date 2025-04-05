@@ -33,7 +33,7 @@ class MetricsCollector(threading.Thread):
 
     def stop(self):
         self.running = False
-
+import hashlib
 @csrf_exempt
 def receive_file(request):
     if request.method == 'POST' and request.FILES.get('file'):
@@ -45,7 +45,9 @@ def receive_file(request):
         file_path = f"/tmp/{filename}"
 
         with open(file_path, 'wb+') as dest:
-            print(f"Received file: {filename}")
+            for chunk in file.chunks():
+                hashlib.sha512(chunk).hexdigest()
+
 
 
         processed_data = {
