@@ -69,6 +69,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'dataManager.wsgi.application'
 
+# Establece un límite mayor si lo consideras necesario (2GB = 2147483648 bytes)
+DATA_UPLOAD_MAX_MEMORY_SIZE = 2347483648  
+FILE_UPLOAD_MAX_MEMORY_SIZE = 2347483648
+
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
